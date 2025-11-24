@@ -6,8 +6,88 @@ SQL TASK7:
 ✅ Create Complex Views using JOIN, WHERE, GROUP BY, AGGREGATE
 ✅ Example SELECT from the views
 
+CODE:
 
 
+-- Create Database
+CREATE DATABASE CompanyDB;
+USE CompanyDB;
+
+
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_name VARCHAR(100),
+    department VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+CREATE TABLE Projects (
+    project_id INT PRIMARY KEY AUTO_INCREMENT,
+    project_name VARCHAR(100),
+    emp_id INT,
+    hours_worked INT,
+    FOREIGN KEY (emp_id) REFERENCES Employees(emp_id)
+);
+
+
+INSERT INTO Employees (emp_name, department, salary) VALUES
+('Arun', 'IT', 50000),
+('Bala', 'HR', 40000),
+('Kumar', 'IT', 55000),
+('Divya', 'Finance', 45000);
+
+INSERT INTO Projects (project_name, emp_id, hours_worked) VALUES
+('Website Dev', 1, 40),
+('Recruitment', 2, 30),
+('App Dev', 1, 50),
+('Audit', 4, 20),
+('Cloud Setup', 3, 45);
+
+
+CREATE VIEW EmpProjectView AS
+SELECT 
+    e.emp_id,
+    e.emp_name,
+    e.department,
+    p.project_name,
+    p.hours_worked,
+    e.salary,
+    (p.hours_worked * 500) AS project_value
+FROM Employees e
+LEFT JOIN Projects p
+ON e.emp_id = p.emp_id
+WHERE e.salary > 40000
+ORDER BY e.emp_name;
+
+
+CREATE VIEW EmpPublicView AS
+SELECT 
+    emp_name,
+    department
+FROM Employees;
+
+
+
+CREATE VIEW DepartmentSalaryStats AS
+SELECT 
+    department,
+    COUNT(*) AS total_employees,
+    AVG(salary) AS avg_salary,
+    MAX(salary) AS max_salary
+FROM Employees
+GROUP BY department;
+
+
+SELECT * FROM EmpProjectView;
+
+SELECT * FROM EmpPublicView;
+
+SELECT * FROM DepartmentSalaryStats;
+
+
+
+
+README :
 
 -- Create Database
 CREATE DATABASE CompanyDB;
